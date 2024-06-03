@@ -14,7 +14,7 @@ export class Service{
         this.bucket = new Storage(this.client);
     }
 
-    async createPost({ title, slug, content, featuredImage, status,userId }){
+    async createPost({ title, slug, content, featuredimage, status,userId }){
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -23,7 +23,7 @@ export class Service{
                 {
                     title,
                     content,
-                    featuredImage,
+                    featuredimage,
                     status,
                     userId,
                 }
@@ -33,7 +33,7 @@ export class Service{
         }
     }
 
-    async updatePost(slug, {title, content, featuredImage, status}){
+    async updatePost(slug, {title, content, featuredimage, status}){
         try {
             return await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
@@ -42,11 +42,11 @@ export class Service{
                 {
                     title,
                     content,
-                    featuredImage,
+                    featuredimage,
                     status,
 
                 }
-            )
+            );
         } catch (error) {
             console.log("Appwrite serive :: updatePost :: error", error);
         }
@@ -105,6 +105,7 @@ export class Service{
                 ID.unique(),
                 file
             )
+            
         } catch (error) {
             console.log("Appwrite serive :: uploadFile :: error", error);
             return false
@@ -125,10 +126,20 @@ export class Service{
     }
 
     getFilePreview(fileId){
-        return this.bucket.getFilePreview(
-            conf.appwriteBucketId,
-            fileId
-        )
+        if (!fileId) {
+            console.error("Missing required parameter: fileId");
+            return "";
+          }
+        try {
+            return this.bucket.getFilePreview(
+                conf.appwriteBucketId,
+                fileId
+            ).href;
+        } catch (error) {
+            console.log("Appwrite service :: getFilePreview :: error", error);
+            return false;
+        }
+        
     }
 }
 
