@@ -46,7 +46,7 @@ export class Service{
                     status,
 
                 }
-            );
+            )
         } catch (error) {
             console.log("Appwrite serive :: updatePost :: error", error);
         }
@@ -126,20 +126,10 @@ export class Service{
     }
 
     getFilePreview(fileId){
-        if (!fileId) {
-            console.error("Missing required parameter: fileId");
-            return "";
-          }
-        try {
-            return this.bucket.getFilePreview(
-                conf.appwriteBucketId,
-                fileId
-            ).href;
-        } catch (error) {
-            console.log("Appwrite service :: getFilePreview :: error", error);
-            return false;
-        }
-        
+        return this.bucket.getFilePreview(
+            conf.appwriteBucketId,
+            fileId
+        )   
     }
 }
 

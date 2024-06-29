@@ -9,38 +9,28 @@ export default function Post() {
     const [post, setPost] = useState(null);
     const { slug } = useParams();
     const navigate = useNavigate();
+   
     const userData = useSelector((state) => state.auth.userData);
-    const isAuthor = post && userData ? post.userId === userData.$id : false;
+
+    const isAuthor = post && userData ? post.userId === userData.$id : false
 
     useEffect(() => {
-        const fetchPost = async () => {
-            if (slug) {
-                try {
-                    const fetchedPost = await appwriteService.getPost(slug);
-                    if (fetchedPost) setPost(fetchedPost);
-                    else navigate("/");
-                } catch (error) {
-                    console.error("Error fetching post:", error);
-                    navigate("/");
-                }
-            } else {
-                navigate("/");
-            }
-        };
-        fetchPost();
+        if (slug) {
+            appwriteService.getPost(slug).then((post) => {
+                if (post) setPost(post);
+                else navigate("/");
+            });
+        } else navigate ("/");
     }, [slug, navigate]);
 
-    const deletePost = async () => {
-        try {
-            const status = await appwriteService.deletePost(post.$id);
+    const deletePost = () => {
+        appwriteService.deletePost(post.$id).then((status) => {
             if (status) {
-                await appwriteService.deleteFile(post.featuredimage);
+                appwriteService.deleteFile(post.featuredimage);
                 navigate("/");
             }
-        } catch (error) {
-            console.error("Error deleting post:", error);
-        }
-    };
+        })
+    }
 
     return post ? (
         <div className="py-8">
@@ -72,11 +62,5 @@ export default function Post() {
                 </div>
             </Container>
         </div>
-    ) : (
-        <div className="py-8">
-            <Container>
-                <p>Loading post...</p>
-            </Container>
-        </div>
-    );
+    ) : null;
 }

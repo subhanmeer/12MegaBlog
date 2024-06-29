@@ -4,39 +4,14 @@ import { Container, PostCard } from "../components";
 
 function Home() {
     const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-
+    
     useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const response = await appwriteService.getPosts();
-                if (response) {
-                    setPosts(response.documents);
-                }
-            } catch (error) {
-                console.error("Error fetching posts:", error);
-            } finally {
-                setLoading(false);
+        appwriteService.getPosts().then((posts) => {
+            if (posts) {
+                setPosts(posts.documents)
             }
-        };
-        fetchPosts();
-    }, []);
-
-    if (loading) {
-        return (
-            <div className="w-full py-8 mt-4 text-center">
-                <Container>
-                    <div className="flex flex-wrap">
-                        <div className="p-2 w-full">
-                            <h1 className="text-2xl font-bold">
-                                Loading posts...
-                            </h1>
-                        </div>
-                    </div>
-                </Container>
-            </div>
-        );
-    }
+        })
+    }, [])
 
     if (posts.length === 0) {
         return (
@@ -51,7 +26,7 @@ function Home() {
                     </div>
                 </Container>
             </div>
-        );
+        )
     }
 
     return (
