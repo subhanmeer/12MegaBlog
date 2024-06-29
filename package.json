@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@reach/auto-id": "^0.18.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@tinymce/tinymce-react": "^5.1.1",
     "appwrite": "^13.0.0",
