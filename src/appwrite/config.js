@@ -88,7 +88,6 @@ export class Service{
                 conf.appwriteCollectionId,
                 queries,
                 
-
             )
         } catch (error) {
             console.log("Appwrite serive :: getPosts :: error", error);
@@ -100,17 +99,18 @@ export class Service{
 
     async uploadFile(file){
         try {
-            return await this.bucket.createFile(
-                conf.appwriteBucketId,
-                ID.unique(),
-                file
-            )
-            
-        } catch (error) {
-            console.log("Appwrite serive :: uploadFile :: error", error);
-            return false
+            const response = await this.bucket.createFile(
+              conf.appwriteBucketId,
+              ID.unique(),
+              file,
+            );
+            console.log("File Upload Response:", response);
+            return response;
+          } catch (error) {
+            console.log("Appwrite service :: uploadFile :: error", error);
+            return false;
+          }
         }
-    }
 
     async deleteFile(fileId){
         try {
